@@ -35,6 +35,7 @@ const DEFAULT_CHARACTER = {
   attacksAndSpellcasting: '',
   equipment: [],
   coins: { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 },
+  gems: [],
   proficienciesAndLanguages: '',
   spells: {
     0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []
@@ -55,6 +56,7 @@ function App() {
           parsed.equipment = parsed.equipment.trim() ? [{ name: parsed.equipment, weight: '', desc: '', type: '', value: '' }] : [];
         }
         if (!parsed.equipment) parsed.equipment = [];
+        if (!parsed.gems) parsed.gems = [];
         return { ...DEFAULT_CHARACTER, ...parsed };
       } catch (e) {
         return DEFAULT_CHARACTER;
@@ -108,6 +110,27 @@ function App() {
   const removeEquipment = (index) => {
     setChar(prev => {
       return { ...prev, equipment: prev.equipment.filter((_, i) => i !== index) };
+    });
+  };
+
+  const addGem = () => {
+    setChar(prev => ({
+      ...prev,
+      gems: [...prev.gems, { type: '', weight: '', size: '', value: '' }]
+    }));
+  };
+
+  const updateGem = (index, field, value) => {
+    setChar(prev => {
+      const newGems = [...prev.gems];
+      newGems[index] = { ...newGems[index], [field]: value };
+      return { ...prev, gems: newGems };
+    });
+  };
+
+  const removeGem = (index) => {
+    setChar(prev => {
+      return { ...prev, gems: prev.gems.filter((_, i) => i !== index) };
     });
   };
 
@@ -378,10 +401,10 @@ function App() {
         {/* EQUIPMENT TAB */}
         <div style={{ display: activeTab === 'equipment' ? 'block' : 'none', gridColumn: 'span 2' }}>
            <div className="panel" style={{display:'flex', gap: '15px'}}>
-              {['cp','sp','ep','gp','pp'].map(coin => (
-                <div className="input-group" key={coin} style={{flex: 1}}>
-                  <label>{coin.toUpperCase()}</label>
-                  <input type="number" value={char.coins[coin]} onChange={e => updateNested('coins', coin, parseInt(e.target.value)||0)} />
+              {[{k: 'cp', label: 'Bronze'}, {k: 'sp', label: 'Prata'}, {k: 'gp', label: 'Ouro'}, {k: 'pp', label: 'Platina'}].map(coin => (
+                <div className="input-group" key={coin.k} style={{flex: 1}}>
+                  <label>{coin.label}</label>
+                  <input type="number" value={char.coins[coin.k]} onChange={e => updateNested('coins', coin.k, parseInt(e.target.value)||0)} />
                 </div>
               ))}
            </div>
@@ -412,6 +435,34 @@ function App() {
                    </div>
                  ))}
                  {char.equipment.length === 0 && <p style={{opacity: 0.5, fontSize: '0.9rem', textAlign: 'center'}}>Nenhum equipamento adicionado ainda.</p>}
+             </div>
+           </div>
+
+           <div className="panel">
+             <div className="panel-header" style={{display: 'flex', justifyContent: 'space-between', padding: '5px 15px'}}>
+                 <span>Joias</span>
+                 <button onClick={addGem} className="btn-add-spell no-print">+ Adicionar Joia</button>
+             </div>
+             <div className="equipment-list">
+                 {char.gems.length > 0 && (
+                   <div className="equipment-row equipment-header">
+                       <span style={{flex: 2}}>Tipo</span>
+                       <span style={{flex: 1}}>Tamanho</span>
+                       <span style={{flex: 1}}>Peso</span>
+                       <span style={{flex: 1}}>Valor</span>
+                       <span style={{width: '30px'}}></span>
+                   </div>
+                 )}
+                 {char.gems.map((item, idx) => (
+                   <div key={`gem-${idx}`} className="equipment-row">
+                     <input type="text" placeholder="Diamante" style={{flex: 2}} value={item.type} onChange={e => updateGem(idx, 'type', e.target.value)} />
+                     <input type="text" placeholder="Pequeno" style={{flex: 1}} value={item.size} onChange={e => updateGem(idx, 'size', e.target.value)} />
+                     <input type="text" placeholder="0.1 kg" style={{flex: 1}} value={item.weight} onChange={e => updateGem(idx, 'weight', e.target.value)} />
+                     <input type="text" placeholder="50 po" style={{flex: 1}} value={item.value} onChange={e => updateGem(idx, 'value', e.target.value)} />
+                     <button onClick={() => removeGem(idx)} className="btn-remove-spell no-print" style={{width: '30px'}}>X</button>
+                   </div>
+                 ))}
+                 {char.gems.length === 0 && <p style={{opacity: 0.5, fontSize: '0.9rem', textAlign: 'center'}}>Nenhuma joia adicionada.</p>}
              </div>
            </div>
         </div>
