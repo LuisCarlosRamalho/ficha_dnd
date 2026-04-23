@@ -274,20 +274,20 @@ function App() {
             <div className="stat-label" style={{marginTop:'5px', fontSize:'0.75rem'}}>Bônus Profic.</div>
             <div className="stat-value" style={{marginBottom: '15px', border: 'none', background: 'var(--panel-bg)', borderRadius: '10px'}}>{formatSign(pb)}</div>
 
-            <div style={{display: 'flex', flexDirection: 'column', gap: '10px', width: '100%'}}>
+            <div style={{display: 'flex', flexDirection: 'column', gap: '15px', width: '100%'}}>
               {ATTRIBUTES_LIST.map(attr => (
-                <div key={attr.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'var(--panel-bg)', padding: '8px 10px', borderRadius: '8px', border: '1px solid var(--panel-border)', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'}}>
-                  <div style={{display:'flex', flexDirection:'column', gap: '2px'}}>
-                    <span style={{fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase'}}>{attr.label}</span>
-                    <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>{formatSign(modifiers[attr.key])} <span style={{fontSize:'0.7rem', fontWeight:'normal'}}>mod</span></span>
-                  </div>
+                <div key={attr.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: 'var(--panel-bg)', padding: '10px 5px', borderRadius: '10px', border: '2px solid var(--panel-border)', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'}}>
+                  <span style={{fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '8px'}}>{attr.label}</span>
                   <input 
                     type="number" 
                     value={char.attributes[attr.key]}
                     onChange={e => updateNested('attributes', attr.key, parseInt(e.target.value)||0)}
                     title={`Valor Base - ${attr.label}`}
-                    style={{width: '45px', height: '45px', fontSize: '1.4rem', textAlign: 'center', fontFamily: 'var(--font-heading)', border: '2px solid var(--panel-border)', borderRadius: '8px', backgroundColor: 'var(--secondary-color)', color: 'black'}}
+                    style={{width: '56px', height: '56px', fontSize: '1.6rem', textAlign: 'center', fontFamily: 'var(--font-heading)', border: '2px solid var(--panel-border)', borderRadius: '12px', backgroundColor: 'var(--secondary-color)', color: '#000'}}
                   />
+                  <div style={{fontSize: '1.3rem', fontWeight: 'bold', marginTop: '-12px', backgroundColor: 'var(--panel-bg)', padding: '2px 15px', borderRadius: '15px', border: '2px solid var(--panel-border)'}}>
+                    {formatSign(modifiers[attr.key])}
+                  </div>
                 </div>
               ))}
             </div>
