@@ -233,13 +233,13 @@ h1, h2, h3, h4, h5, h6 {
 /* Main Grid */
 .main-grid {
   display: grid;
-  grid-template-columns: 100px 1fr 1fr;
+  grid-template-columns: 160px 1fr 1fr;
   gap: 20px;
 }
 
 @media (max-width: 992px) {
   .main-grid {
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: 160px 1fr;
   }
 }
 
