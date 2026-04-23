@@ -134,6 +134,14 @@ function App() {
     });
   };
 
+  const updateDeathSave = (type, index, value) => {
+    setChar(prev => {
+      const arr = [...prev.deathSaves[type]];
+      arr[index] = value;
+      return { ...prev, deathSaves: { ...prev.deathSaves, [type]: arr } };
+    });
+  };
+
   const [activeTab, setActiveTab] = useState('main');
 
   useEffect(() => {
@@ -375,18 +383,59 @@ function App() {
                     <input type="text" value={char.hitDice} onChange={e=>updateField('hitDice', e.target.value)} placeholder="Ex: 1d10" />
                 </div>
                 <div className="input-group" style={{flex:1}}>
-                    <label>Sucessos na Morte (Checkmarks no papel)</label>
-                    <div>🟩 🟩 🟩</div>
+                    <label>Sucessos na Morte</label>
+                    <div style={{display:'flex', gap:'8px', marginBottom:'10px'}}>
+                      {[0,1,2].map(i => <input type="checkbox" key={`succ-${i}`} checked={char.deathSaves.successes[i]} onChange={e => updateDeathSave('successes', i, e.target.checked)} style={{transform: 'scale(1.5)'}} />)}
+                    </div>
                     <label>Falhas na Morte</label>
-                    <div>🟥 🟥 🟥</div>
+                    <div style={{display:'flex', gap:'8px'}}>
+                      {[0,1,2].map(i => <input type="checkbox" key={`fail-${i}`} checked={char.deathSaves.failures[i]} onChange={e => updateDeathSave('failures', i, e.target.checked)} style={{transform: 'scale(1.5)'}} />)}
+                    </div>
                 </div>
              </div>
           </div>
 
           <div className="panel">
-             <div className="panel-header">Ataques e Magias</div>
-             <div className="input-group text-area-box">
-                <textarea style={{minHeight:'300px'}} value={char.attacksAndSpellcasting} onChange={e=>updateField('attacksAndSpellcasting', e.target.value)} placeholder="Arma | Bônus Atq | Dano/Tipo..." />
+             <div className="panel-header">Ataques (Armas Equipadas)</div>
+             <div className="equipment-list">
+                 {char.equipment.filter(eq => eq.type && eq.type.toLowerCase().includes('arma')).map((arma, idx) => (
+                    <div key={`atk-${idx}`} className="equipment-row" style={{borderBottom: '1px solid var(--panel-border)', paddingBottom: '10px'}}>
+                       <strong style={{flex: 2}}>{arma.name || 'Arma sem nome'}</strong>
+                       <span style={{flex: 3, fontSize: '0.9rem'}}>{arma.desc}</span>
+                    </div>
+                 ))}
+                 {char.equipment.filter(eq => eq.type && eq.type.toLowerCase().includes('arma')).length === 0 && (
+                    <p style={{opacity: 0.5, fontSize: '0.85rem'}}>Escreva "arma" no Tipo de um item na aba Equipamentos para listar aqui.</p>
+                 )}
+                 <textarea style={{minHeight:'100px', width: '100%', marginTop: '10px'}} value={char.attacksAndSpellcasting} onChange={e=>updateField('attacksAndSpellcasting', e.target.value)} placeholder="Ataques extras ou anotações de combate..." className="spell-input-desc" />
+             </div>
+          </div>
+          
+          <div className="panel">
+             <div className="panel-header">Magias (Resumo Rápido)</div>
+             <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
+               {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(level => {
+                 const spells = char.spells[level] || [];
+                 if (spells.length === 0) return null;
+                 return (
+                   <div key={`combat-spells-${level}`} style={{marginBottom: '10px'}}>
+                     <h4 style={{borderBottom: '1px solid #ccc', paddingBottom: '2px', marginBottom: '5px'}}>
+                        {level === 0 ? 'Truques (Cantrips)' : `Círculo ${level}`}
+                     </h4>
+                     <ul style={{listStyleType: 'square', marginLeft: '20px', fontSize: '0.9rem'}}>
+                       {spells.map((sp, i) => (
+                          <li key={`spl-${i}`} style={{marginBottom: '3px'}}>
+                            <strong>{sp.name || 'Magia sem nome'}</strong> {sp.page ? `(pág ${sp.page})` : ''} 
+                            {sp.desc ? ` - ${sp.desc}` : ''}
+                          </li>
+                       ))}
+                     </ul>
+                   </div>
+                 );
+               })}
+               {Object.values(char.spells).every(arr => arr.length === 0) && (
+                 <p style={{opacity: 0.5, fontSize: '0.85rem'}}>Nenhuma magia cadastrada na aba Magias.</p>
+               )}
              </div>
           </div>
           
