@@ -36,7 +36,9 @@ const DEFAULT_CHARACTER = {
   equipment: '',
   coins: { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 },
   proficienciesAndLanguages: '',
-  spells: '',
+  spells: {
+    0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []
+  },
   portrait: null,
 };
 
@@ -45,13 +47,44 @@ function App() {
     const saved = localStorage.getItem('dnd-character-sheet');
     if (saved) {
       try {
-        return { ...DEFAULT_CHARACTER, ...JSON.parse(saved) };
+        const parsed = JSON.parse(saved);
+        if (typeof parsed.spells === 'string' || !parsed.spells) {
+          parsed.spells = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
+        }
+        return { ...DEFAULT_CHARACTER, ...parsed };
       } catch (e) {
         return DEFAULT_CHARACTER;
       }
     }
     return DEFAULT_CHARACTER;
   });
+
+  const addSpell = (level) => {
+    setChar(prev => {
+      const sp = { ...prev.spells };
+      if (!sp[level]) sp[level] = [];
+      sp[level] = [...sp[level], { name: '', desc: '', page: '' }];
+      return { ...prev, spells: sp };
+    });
+  };
+
+  const updateSpell = (level, index, field, value) => {
+    setChar(prev => {
+      const sp = { ...prev.spells };
+      const newLevel = [...sp[level]];
+      newLevel[index] = { ...newLevel[index], [field]: value };
+      sp[level] = newLevel;
+      return { ...prev, spells: sp };
+    });
+  };
+
+  const removeSpell = (level, index) => {
+    setChar(prev => {
+      const sp = { ...prev.spells };
+      sp[level] = sp[level].filter((_, i) => i !== index);
+      return { ...prev, spells: sp };
+    });
+  };
 
   const [activeTab, setActiveTab] = useState('main');
 
@@ -339,8 +372,46 @@ function App() {
         <div style={{ display: activeTab === 'spells' ? 'block' : 'none', gridColumn: 'span 2' }}>
            <div className="panel">
              <div className="panel-header">Grimório / Magias Conhecidas</div>
-             <div className="input-group text-area-box">
-                <textarea style={{minHeight:'600px'}} value={char.spells} onChange={e=>updateField('spells', e.target.value)} placeholder="Nível 0 (Truques): ...&#10;Nível 1: ..." />
+             <div className="spells-grid">
+               {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(level => (
+                 <div key={`spell-lvl-${level}`} className="spell-circle-box">
+                   <div className="spell-circle-header">
+                     <h3>{level === 0 ? 'Truques (0)' : `Círculo ${level}`}</h3>
+                     <button onClick={() => addSpell(level)} className="btn-add-spell no-print">+ Adicionar</button>
+                   </div>
+                   <div className="spell-items">
+                     {(char.spells[level] || []).map((sp, idx) => (
+                       <div key={`sp-${level}-${idx}`} className="spell-item-row">
+                         <div className="spell-item-top">
+                           <input 
+                             type="text" 
+                             placeholder="Nome da magia" 
+                             value={sp.name} 
+                             onChange={e => updateSpell(level, idx, 'name', e.target.value)} 
+                             className="spell-input-name"
+                           />
+                           <input 
+                             type="text" 
+                             placeholder="Pág" 
+                             value={sp.page} 
+                             onChange={e => updateSpell(level, idx, 'page', e.target.value)} 
+                             className="spell-input-page"
+                           />
+                           <button onClick={() => removeSpell(level, idx)} className="btn-remove-spell no-print">X</button>
+                         </div>
+                         <textarea 
+                           placeholder="Descrição / Efeitos" 
+                           value={sp.desc} 
+                           onChange={e => updateSpell(level, idx, 'desc', e.target.value)}
+                           className="spell-input-desc"
+                           rows="2"
+                         />
+                       </div>
+                     ))}
+                     {(char.spells[level] || []).length === 0 && <p style={{opacity: 0.5, fontSize: '0.8rem'}}>Nenhuma magia neste círculo</p>}
+                   </div>
+                 </div>
+               ))}
              </div>
            </div>
         </div>

@@ -404,3 +404,88 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
   margin-top: 5px;
 }
+
+/* Spells Grid */
+.spells-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .spells-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.spell-circle-box {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--border-radius);
+  padding: 10px;
+}
+.spell-circle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+.btn-add-spell {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.btn-remove-spell {
+  background: transparent;
+  color: #a00;
+  border: 1px solid #a00;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-remove-spell:hover {
+  background: #a00;
+  color: white;
+}
+.spell-item-row {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--panel-border);
+}
+.spell-item-top {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+.spell-input-name {
+  flex: 1;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+.spell-input-page {
+  width: 60px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+.spell-input-desc {
+  width: 100%;
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  resize: vertical;
+}
