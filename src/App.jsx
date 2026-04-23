@@ -261,18 +261,21 @@ function App() {
             <div className="stat-label">Bônus Profic.</div>
             <div className="stat-value" style={{marginBottom: '20px', border: 'none'}}>{formatSign(pb)}</div>
 
-            {ATTRIBUTES_LIST.map(attr => (
-              <div key={attr.key} className="attribute-box">
-                <span className="attribute-name">{attr.label}</span>
-                <input 
-                  type="number" 
-                  className="attribute-value"
-                  value={char.attributes[attr.key]}
-                  onChange={e => updateNested('attributes', attr.key, parseInt(e.target.value)||0)}
-                />
-                <span className="attribute-mod">{formatSign(modifiers[attr.key])}</span>
-              </div>
-            ))}
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%'}}>
+              {ATTRIBUTES_LIST.map(attr => (
+                <div key={attr.key} className="attribute-box" style={{marginBottom: 0, padding: '5px'}}>
+                  <span className="attribute-name" style={{fontSize: '0.65rem'}}>{attr.label}</span>
+                  <input 
+                    type="number" 
+                    className="attribute-value"
+                    value={char.attributes[attr.key]}
+                    onChange={e => updateNested('attributes', attr.key, parseInt(e.target.value)||0)}
+                    style={{width: '40px', height: '40px', fontSize: '1.2rem'}}
+                  />
+                  <span className="attribute-mod" style={{fontSize: '1rem', padding: '2px 10px'}}>{formatSign(modifiers[attr.key])}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

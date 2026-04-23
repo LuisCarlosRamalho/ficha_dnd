@@ -129,7 +129,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .panel {
-  background-color: var(--panel-bg);
+  background-color: color-mix(in srgb, var(--panel-bg) 85%, transparent);
+  backdrop-filter: blur(4px);
   border: 2px solid var(--panel-border);
   border-radius: var(--border-radius);
   padding: 15px;
@@ -535,4 +536,36 @@ h1, h2, h3, h4, h5, h6 {
     width: 100% !important;
     margin-top: 5px;
   }
+}
+
+/* Background Images per Theme */
+html[data-theme="dark"] body {
+  background-image: url('./assets/bg_dark.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+html[data-theme="parchment"] body {
+  background-image: url('./assets/bg_parchment.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+html[data-theme="blue"] body {
+  background-image: url('./assets/bg_blue.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+html[data-theme="green"] body {
+  background-image: url('./assets/bg_green.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+html[data-theme="light"] body {
+  background-image: url('./assets/bg_light.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
