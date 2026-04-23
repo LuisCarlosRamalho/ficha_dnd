@@ -36,6 +36,11 @@ const DEFAULT_CHARACTER = {
   equipment: [],
   coins: { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 },
   gems: [],
+  customSkills: [
+    { name: '', attr: 'wis', isProf: false },
+    { name: '', attr: 'int', isProf: false },
+    { name: '', attr: 'cha', isProf: false }
+  ],
   proficienciesAndLanguages: '',
   spells: {
     0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []
@@ -56,7 +61,13 @@ function App() {
           parsed.equipment = parsed.equipment.trim() ? [{ name: parsed.equipment, weight: '', desc: '', type: '', value: '' }] : [];
         }
         if (!parsed.equipment) parsed.equipment = [];
+        if (!parsed.equipment) parsed.equipment = [];
         if (!parsed.gems) parsed.gems = [];
+        if (!parsed.customSkills) parsed.customSkills = [
+          { name: '', attr: 'wis', isProf: false },
+          { name: '', attr: 'int', isProf: false },
+          { name: '', attr: 'cha', isProf: false }
+        ];
         return { ...DEFAULT_CHARACTER, ...parsed };
       } catch (e) {
         return DEFAULT_CHARACTER;
@@ -311,6 +322,45 @@ function App() {
                 </div>
               );
             })}
+            
+            <div style={{marginTop: '15px', borderTop: '1px dashed var(--panel-border)', paddingTop: '10px'}}>
+              {char.customSkills.map((sk, idx) => {
+                const val = modifiers[sk.attr] + (sk.isProf ? pb : 0);
+                return (
+                  <div key={`custom-skill-${idx}`} className="skill-item" style={{display: 'flex', alignItems: 'center', marginBottom: '8px'}}>
+                    <input type="checkbox" checked={sk.isProf} onChange={e => {
+                       const newSkills = [...char.customSkills];
+                       newSkills[idx].isProf = e.target.checked;
+                       updateField('customSkills', newSkills);
+                    }} />
+                    <span className="skill-mod">{formatSign(val)}</span>
+                    <input 
+                      type="text" 
+                      value={sk.name} 
+                      onChange={e => {
+                        const newSkills = [...char.customSkills];
+                        newSkills[idx].name = e.target.value;
+                        updateField('customSkills', newSkills);
+                      }} 
+                      placeholder="Outro..." 
+                      className="spell-input-name"
+                      style={{flex: 1, padding: '2px 5px', fontSize: '0.8rem', background: 'transparent', border: 'none', borderBottom: '1px solid var(--panel-border)'}} 
+                    />
+                    <select 
+                      value={sk.attr} 
+                      onChange={e => {
+                        const newSkills = [...char.customSkills];
+                        newSkills[idx].attr = e.target.value;
+                        updateField('customSkills', newSkills);
+                      }}
+                      style={{marginLeft: '5px', padding: '2px', fontSize: '0.7rem', background: 'transparent', border: '1px solid var(--panel-border)', color: 'var(--text-color)', cursor: 'pointer'}}
+                    >
+                      {ATTRIBUTES_LIST.map(a => <option key={a.key} value={a.key} style={{color: 'black'}}>{a.label.substring(0,3)}</option>)}
+                    </select>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
         </div>
