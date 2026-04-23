@@ -489,3 +489,50 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-color);
   resize: vertical;
 }
+
+/* Equipment Grid */
+.equipment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.equipment-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.equipment-header {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+.equipment-row input {
+  padding: 6px;
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-body);
+}
+@media (max-width: 768px) {
+  .equipment-row {
+    flex-wrap: wrap;
+    border: 1px solid var(--panel-border);
+    padding: 10px;
+    border-radius: 8px;
+    background-color: var(--bg-color);
+  }
+  .equipment-header {
+    display: none;
+  }
+  .equipment-row input {
+    flex: 1 1 100% !important;
+  }
+  .equipment-row button {
+    width: 100% !important;
+    margin-top: 5px;
+  }
+}

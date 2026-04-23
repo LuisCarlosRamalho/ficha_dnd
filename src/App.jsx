@@ -33,7 +33,7 @@ const DEFAULT_CHARACTER = {
   flaws: '',
   featuresTraits: '',
   attacksAndSpellcasting: '',
-  equipment: '',
+  equipment: [],
   coins: { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 },
   proficienciesAndLanguages: '',
   spells: {
@@ -51,6 +51,10 @@ function App() {
         if (typeof parsed.spells === 'string' || !parsed.spells) {
           parsed.spells = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
         }
+        if (typeof parsed.equipment === 'string') {
+          parsed.equipment = parsed.equipment.trim() ? [{ name: parsed.equipment, weight: '', desc: '', type: '', value: '' }] : [];
+        }
+        if (!parsed.equipment) parsed.equipment = [];
         return { ...DEFAULT_CHARACTER, ...parsed };
       } catch (e) {
         return DEFAULT_CHARACTER;
@@ -83,6 +87,27 @@ function App() {
       const sp = { ...prev.spells };
       sp[level] = sp[level].filter((_, i) => i !== index);
       return { ...prev, spells: sp };
+    });
+  };
+
+  const addEquipment = () => {
+    setChar(prev => ({
+      ...prev,
+      equipment: [...prev.equipment, { name: '', weight: '', desc: '', type: '', value: '' }]
+    }));
+  };
+
+  const updateEquipment = (index, field, value) => {
+    setChar(prev => {
+      const newEq = [...prev.equipment];
+      newEq[index] = { ...newEq[index], [field]: value };
+      return { ...prev, equipment: newEq };
+    });
+  };
+
+  const removeEquipment = (index) => {
+    setChar(prev => {
+      return { ...prev, equipment: prev.equipment.filter((_, i) => i !== index) };
     });
   };
 
@@ -361,9 +386,32 @@ function App() {
               ))}
            </div>
            <div className="panel">
-             <div className="panel-header">Equipamento</div>
-             <div className="input-group text-area-box">
-                <textarea style={{minHeight:'400px'}} value={char.equipment} onChange={e=>updateField('equipment', e.target.value)} />
+             <div className="panel-header" style={{display: 'flex', justifyContent: 'space-between', padding: '5px 15px'}}>
+                 <span>Equipamento</span>
+                 <button onClick={addEquipment} className="btn-add-spell no-print">+ Adicionar Item</button>
+             </div>
+             <div className="equipment-list">
+                 {char.equipment.length > 0 && (
+                   <div className="equipment-row equipment-header">
+                       <span style={{flex: 2}}>Nome</span>
+                       <span style={{flex: 1}}>Tipo</span>
+                       <span style={{flex: 3}}>Descrição</span>
+                       <span style={{flex: 1}}>Peso</span>
+                       <span style={{flex: 1}}>Valor</span>
+                       <span style={{width: '30px'}}></span>
+                   </div>
+                 )}
+                 {char.equipment.map((item, idx) => (
+                   <div key={`eq-${idx}`} className="equipment-row">
+                     <input type="text" placeholder="Espada Longa..." style={{flex: 2}} value={item.name} onChange={e => updateEquipment(idx, 'name', e.target.value)} />
+                     <input type="text" placeholder="Arma Marcial" style={{flex: 1}} value={item.type} onChange={e => updateEquipment(idx, 'type', e.target.value)} />
+                     <input type="text" placeholder="1d8 cortante" style={{flex: 3}} value={item.desc} onChange={e => updateEquipment(idx, 'desc', e.target.value)} />
+                     <input type="text" placeholder="1.5 kg" style={{flex: 1}} value={item.weight} onChange={e => updateEquipment(idx, 'weight', e.target.value)} />
+                     <input type="text" placeholder="15 po" style={{flex: 1}} value={item.value} onChange={e => updateEquipment(idx, 'value', e.target.value)} />
+                     <button onClick={() => removeEquipment(idx)} className="btn-remove-spell no-print" style={{width: '30px'}}>X</button>
+                   </div>
+                 ))}
+                 {char.equipment.length === 0 && <p style={{opacity: 0.5, fontSize: '0.9rem', textAlign: 'center'}}>Nenhum equipamento adicionado ainda.</p>}
              </div>
            </div>
         </div>
