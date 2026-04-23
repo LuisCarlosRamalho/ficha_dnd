@@ -400,13 +400,16 @@ function App() {
 
         {/* EQUIPMENT TAB */}
         <div style={{ display: activeTab === 'equipment' ? 'block' : 'none', gridColumn: 'span 2' }}>
-           <div className="panel" style={{display:'flex', gap: '15px'}}>
-              {[{k: 'cp', label: 'Bronze'}, {k: 'sp', label: 'Prata'}, {k: 'gp', label: 'Ouro'}, {k: 'pp', label: 'Platina'}].map(coin => (
-                <div className="input-group" key={coin.k} style={{flex: 1}}>
-                  <label>{coin.label}</label>
-                  <input type="number" value={char.coins[coin.k]} onChange={e => updateNested('coins', coin.k, parseInt(e.target.value)||0)} />
-                </div>
-              ))}
+           <div className="panel">
+              <div className="panel-header">Moedas</div>
+              <div style={{display:'flex', gap: '15px'}}>
+                {[{k: 'cp', label: 'Bronze'}, {k: 'sp', label: 'Prata'}, {k: 'gp', label: 'Ouro'}, {k: 'pp', label: 'Platina'}].map(coin => (
+                  <div className="input-group" key={coin.k} style={{flex: 1}}>
+                    <label>{coin.label}</label>
+                    <input type="number" value={char.coins[coin.k]} onChange={e => updateNested('coins', coin.k, parseInt(e.target.value)||0)} />
+                  </div>
+                ))}
+              </div>
            </div>
            <div className="panel">
              <div className="panel-header" style={{display: 'flex', justifyContent: 'space-between', padding: '5px 15px'}}>
