@@ -268,22 +268,26 @@ function App() {
       <div className="main-grid">
         {/* ATTRIBUTES COL */}
         <div className="attributes-col">
-          <div className="panel" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            <div className="stat-label">Bônus Profic.</div>
-            <div className="stat-value" style={{marginBottom: '20px', border: 'none'}}>{formatSign(pb)}</div>
+          <div className="panel" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '15px 10px'}}>
+            <div className="panel-header" style={{width: 'calc(100% + 20px)'}}>Atributos</div>
+            
+            <div className="stat-label" style={{marginTop:'5px', fontSize:'0.75rem'}}>Bônus Profic.</div>
+            <div className="stat-value" style={{marginBottom: '15px', border: 'none', background: 'var(--panel-bg)', borderRadius: '10px'}}>{formatSign(pb)}</div>
 
-            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%'}}>
+            <div style={{display: 'flex', flexDirection: 'column', gap: '10px', width: '100%'}}>
               {ATTRIBUTES_LIST.map(attr => (
-                <div key={attr.key} className="attribute-box" style={{marginBottom: 0, padding: '5px'}}>
-                  <span className="attribute-name" style={{fontSize: '0.65rem'}}>{attr.label}</span>
+                <div key={attr.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'var(--panel-bg)', padding: '8px 10px', borderRadius: '8px', border: '1px solid var(--panel-border)', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'}}>
+                  <div style={{display:'flex', flexDirection:'column', gap: '2px'}}>
+                    <span style={{fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase'}}>{attr.label}</span>
+                    <span style={{fontSize: '1.1rem', fontWeight: 'bold'}}>{formatSign(modifiers[attr.key])} <span style={{fontSize:'0.7rem', fontWeight:'normal'}}>mod</span></span>
+                  </div>
                   <input 
                     type="number" 
-                    className="attribute-value"
                     value={char.attributes[attr.key]}
                     onChange={e => updateNested('attributes', attr.key, parseInt(e.target.value)||0)}
-                    style={{width: '40px', height: '40px', fontSize: '1.2rem'}}
+                    title={`Valor Base - ${attr.label}`}
+                    style={{width: '45px', height: '45px', fontSize: '1.4rem', textAlign: 'center', fontFamily: 'var(--font-heading)', border: '2px solid var(--panel-border)', borderRadius: '8px', backgroundColor: 'var(--secondary-color)', color: 'black'}}
                   />
-                  <span className="attribute-mod" style={{fontSize: '1rem', padding: '2px 10px'}}>{formatSign(modifiers[attr.key])}</span>
                 </div>
               ))}
             </div>
